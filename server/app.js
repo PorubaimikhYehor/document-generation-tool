@@ -3,7 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// var cors = require('cors');
+var cors = require('cors');
 const bodyParser = require('body-parser')
 
 var languagesRouter = require('./routes/language.routes');
@@ -18,7 +18,7 @@ const locations = require('../config/locations.config');
 var app = express();
 
 app.use(bodyParser.json())
-// app.use(cors());
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json({ limit: '100mb' }));
