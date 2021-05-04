@@ -12,6 +12,7 @@ var templatesRouter = require('./routes/template.routes');
 var companyEntitiesRouter = require('./routes/companyEntities.routes');
 var companyOwnersRouter = require('./routes/companyOwners.routes');
 var contentRouter = require('./routes/content.routes');
+var countriesRouter = require('./routes/country.routes');
 
 const locations = require('../config/locations.config');
 
@@ -31,6 +32,7 @@ app.use('/api/content', contentRouter);
 app.use('/api/templates', templatesRouter);
 app.use('/api/companyEntities', companyEntitiesRouter);
 app.use('/api/companyOwners', companyOwnersRouter);
+app.use('/api/countries', countriesRouter);
 
 // const _app_folder = location.client;
 
