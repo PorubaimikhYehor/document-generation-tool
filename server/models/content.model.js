@@ -24,14 +24,16 @@ Content.getAll = async (result) => {
 };
 
 Content.addOne = (content, result) => {
+  console.log(content);
   let err = null;
   const sqlStrData = [
     content.name,
     content.parentId,
     content.isUsedDefault,
-    content.orderNumber
+    content.orderNumber,
+    JSON.stringify(content.countries),
   ];
-  const sqlStr = 'INSERT INTO content (name, parentId, isUsedDefault, orderNumber) VALUES (?, ?, ?, ?); SELECT * FROM content ORDER BY ID DESC LIMIT 1;';
+  const sqlStr = 'INSERT INTO content (name, parentId, isUsedDefault, orderNumber, countries) VALUES (?, ?, ?, ?, ?); SELECT * FROM content ORDER BY ID DESC LIMIT 1;';
   mariadb.pool.query(sqlStr, sqlStrData)
     .then(res => result(null, res[1][0]))
     .catch(err => result(err, null))
@@ -42,10 +44,11 @@ Content.updateOne = (content, result) => {
     content.name,
     content.parentId,
     content.isUsedDefault,
+    JSON.stringify(content.countries),
     content.id,
     content.id,
   ];
-  const sqlStr = `UPDATE content SET name=?, parentId=?, isUsedDefault=? where id = ?;SELECT * FROM content where id = ?;`;
+  const sqlStr = `UPDATE content SET name=?, parentId=?, isUsedDefault=?, countries=? where id = ?;SELECT * FROM content where id = ?;`;
   mariadb.pool.query(sqlStr, sqlStrData)
     .then(res => result(null, content))
     .catch(err => result(err, null))

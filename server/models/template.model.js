@@ -12,7 +12,6 @@ Template.getAll = async (result) => {
   const templates = await mariadb.pool.query('SELECT * from templates')
     .catch(e => err = e);
   let sqlReq = '';
-  // templates.length && templates.map(t => sqlReq += `select templateId, languageId, originalname from blanks where templateId = ${t.id};`);
   templates.length && templates.map(t => sqlReq += `select * from blanks where templateId = ${t.id};`);
   sqlReq += 'select templateId from blanks';
   const blanks = sqlReq ? await mariadb.pool.query(sqlReq).catch(e => err = e) : null;
@@ -21,8 +20,14 @@ Template.getAll = async (result) => {
 };
 
 Template.updateTemplate = (template, result) => {
-  const sqlStrData = [template.name, template.description, template.id, template.id]
-  const sqlStr = 'UPDATE templates SET name = ?, description = ? WHERE (id = ?);SELECT * FROM templates where id = ?;'
+  const sqlStrData = [
+    template.name,
+    template.description,
+    JSON.stringify(template.countries),
+    template.id,
+    template.id,
+  ]
+  const sqlStr = 'UPDATE templates SET name = ?, description = ?, countries = ? WHERE (id = ?);SELECT * FROM templates where id = ?;'
   mariadb.pool.query(sqlStr, sqlStrData)
     .then(res => result(null, res[1][0]))
     .catch(err => result(err, null))
@@ -39,8 +44,9 @@ Template.addOne = (template, result) => {
   const sqlStrData = [
     template.name,
     template.description,
+    JSON.stringify(template.countries),
   ];
-  const sqlStr = 'INSERT INTO templates (name, description) VALUES (?, ?); SELECT * FROM templates ORDER BY ID DESC LIMIT 1;';
+  const sqlStr = 'INSERT INTO templates (name, description, countries) VALUES (?, ?, ?); SELECT * FROM templates ORDER BY ID DESC LIMIT 1;';
   mariadb.pool.query(sqlStr, sqlStrData)
     .then(res => result(null, res[1][0]))
     .catch(e => err = e);
